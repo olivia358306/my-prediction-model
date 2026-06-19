@@ -6,6 +6,9 @@ import numpy as np
 # --- 1. 页面基础设置 ---
 st.set_page_config(page_title="入窖温度预测系统", layout="centered")
 
+# 定义全局标准字体样式 (16px)
+standard_font_style = "font-size: 16px; font-weight: bold; color: #333;"
+
 # --- 2. 顶部区域 (极致紧凑布局) ---
 
 # Logo 区域
@@ -13,39 +16,42 @@ logo_path = "company_logo.png"
 if os.path.exists(logo_path):
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        # 宽度进一步微调，配合 margin-bottom 消除与下方标题的空隙
         st.image(logo_path, width=140, use_column_width=False)
         # 使用 CSS 强制减少图片下方的留白
         st.markdown("<div style='margin-top: -20px;'></div>", unsafe_allow_html=True)
 else:
     st.warning("⚠️ 未找到 company_logo.png")
 
-# 标题区域 (使用 HTML h3 标签精确控制大小为 18px，约为默认标题的一半)
+# 标题区域 (统一为 16px，并删除了前面的小图标)
 st.markdown(
-    """
+    f"""
     <div style="text-align: center; margin-bottom: 5px;">
-        <h3 style="font-size: 18px; font-weight: bold; color: #333;">🍶 浓香型白酒大粮糟入窖温度预测系统</h3>
+        <div style="{standard_font_style}">浓香型白酒大粮糟入窖温度预测系统</div>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-# 个人信息区域 (置顶，紧凑型 Info 框)
+# 个人信息区域 (删除了 info 框前面的小图标 icon="ℹ️")
 st.info(
     "**开发制作：** 陶金山 | 工号：016287\n\n"
-    "**所属部门：** 生产中心/酿造部/酿酒一车间/跟班长\n\n"
-    "**版本：** v1.0",
-    icon="ℹ️"
+    "**所属部门：** 生产中心/酿酒一车间\n\n"
+    "**版本：** v2.0"
 )
 
-# 副标题 (紧贴上方 Info 框)
+# 副标题 (保持小字)
 st.caption("基于逐步回归与随机森林算法的双重验证模型")
 
-# 分割线 (可选，如果觉得太挤可以保留一条细线)
+# 分割线
 st.divider()
 
-# --- 3. 数据录入区域 ---
-st.markdown("#### 📊 数据录入")  # 使用四级标题，比 Header 小
+# --- 3. 数据录入区域 (标题字体统一为 16px) ---
+st.markdown(
+    f"""
+    <div style="{standard_font_style}">数据录入</div>
+    """,
+    unsafe_allow_html=True
+)
 
 col_a, col_b, col_c = st.columns(3)
 
@@ -71,7 +77,14 @@ if st.button("🚀 开始双重预测", type="primary"):
         st.error(f"模型加载失败: {e}")
 
     # --- 5. 结果展示区 ---
-    st.markdown("#### 📈 预测结果对比")
+    
+    # 结果标题字体统一为 16px
+    st.markdown(
+        f"""
+        <div style="{standard_font_style}">预测结果对比</div>
+        """,
+        unsafe_allow_html=True
+    )
 
     res_col1, res_col2 = st.columns(2)
 
@@ -82,13 +95,30 @@ if st.button("🚀 开始双重预测", type="primary"):
     with res_col2:
         if rf_result is not None:
             st.metric(label="随机森林预测值", value=f"{rf_result:.2f} ℃", delta=f"差异: {rf_result - formula_result:+.2f}")
-            st.success("机器学习模型验证通过")
+            # 机器学习模型验证通过字体统一为 16px
+            st.markdown(
+                f"""
+                <div style="color: green; {standard_font_style}">✅ 机器学习模型验证通过</div>
+                """,
+                unsafe_allow_html=True
+            )
 
-    # 偏差分析与文案输出
+    # 偏差分析与文案输出 (字体统一为 16px)
     diff = abs(formula_result - rf_result)
 
-    # 【重点】这里保留了你需要的那句完整文案
     if diff < 1.0:
-        st.success(f"✅ 两种模型结果高度一致 (偏差 {diff:.2f})，数据可信度高!")
+        # 结果高度一致字体统一为 16px
+        st.markdown(
+            f"""
+            <div style="color: green; {standard_font_style}">✅ 两种模型结果高度一致 (偏差 {diff:.2f})，数据可信度高!</div>
+            """,
+            unsafe_allow_html=True
+        )
     else:
-        st.warning(f"⚠️ 两种模型结果存在一定偏差 ({diff:.2f})，建议人工复核。")
+        # 存在一定偏差字体统一为 16px
+        st.markdown(
+            f"""
+            <div style="color: orange; {standard_font_style}">⚠️ 两种模型结果存在一定偏差 ({diff:.2f})，建议人工复核。</div>
+            """,
+            unsafe_allow_html=True
+        )
